@@ -43,7 +43,7 @@
         alert('Login successful');
         localStorage.setItem('token', data.token);
         // Redirect after login
-        window.location.href = 'dashboard.html';
+        window.location.href = '/books';
       } else {
         alert(data.message || 'Login failed');
       }
