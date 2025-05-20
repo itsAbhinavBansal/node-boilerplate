@@ -45,7 +45,7 @@
         alert('Signup successful');
         localStorage.setItem('token', data.token);
         // Redirect after signup
-        window.location.href = 'dashboard.html';
+        window.location.href = '/login';
       } else {
         alert(data.message || 'Signup failed');
       }

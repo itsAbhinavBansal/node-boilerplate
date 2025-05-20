@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const Book = require('../models/Book');
+const bcrypt = require('bcrypt');
 
 const createToken = (user) => {
   return jwt.sign(
@@ -8,6 +9,10 @@ const createToken = (user) => {
     process.env.JWT_SECRET,
     { expiresIn: '1d' }
   );
+};
+
+const comparePassword = function (candidatePassword, hashedPassword) {
+  return bcrypt.compare(candidatePassword, hashedPassword);
 };
 
 exports.getBooks = async (req, res) => {
@@ -76,7 +81,7 @@ exports.login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
-    const isMatch = await user.comparePassword(password);
+    const isMatch = await comparePassword(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
