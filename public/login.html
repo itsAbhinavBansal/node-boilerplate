@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 400px; margin: 2rem auto; }
+    input, button { width: 100%; padding: 0.5rem; margin-top: 0.5rem; }
+  </style>
+</head>
+<body>
+  <h2>Login</h2>
+  <input id="email" type="email" placeholder="Email" />
+  <input id="password" type="password" placeholder="Password" />
+  <button onclick="login()">Login</button>
+  <p>Don't have an account? <button onclick="goSignup()">Signup here</button></p>
+
+  <script>
+    const apiBase = 'https://node-boilerplate-o1ll.onrender.com/api';
+
+    function goSignup() {
+      window.location.href = '/signup';
+    }
+
+    async function login() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!email || !password) {
+        alert('Please enter email and password');
+        return;
+      }
+
+      const res = await fetch(`${apiBase}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert('Login successful');
+        localStorage.setItem('token', data.token);
+        // Redirect after login
+        window.location.href = 'dashboard.html';
+      } else {
+        alert(data.message || 'Login failed');
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,27 +1,88 @@
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const Book = require('../models/Book');
 
-const getUsers = async (req, res) => {
-  const users = await User.find();
-  res.json(users);
+const createToken = (user) => {
+  return jwt.sign(
+    { id: user._id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '1d' }
+  );
 };
 
-const createUser = async (req, res) => {
-  const user = new User(req.body);
-  await user.save();
-  res.status(201).json(user);
+exports.getBooks = async (req, res) => {
+  try {
+    const books = await Book.find();
+    res.json(books);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to get books', error: err.message });
+  }
 };
 
-const updateUser = async (req, res) => {
-  const user = await User.findById({ _id: req.params.id });
-  user.name = req.body.name;
-  user.email = req.body.email;
-  await user.save();
-  res.status(201).json(user);
+exports.createBook = async (req, res) => {
+  try {
+    const book = new Book(req.body);
+    await book.save();
+    res.status(201).json(book);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to create book', error: err.message });
+  }
 };
 
-const deleteUser = async (req, res) => {
-  const user = await User.findByIdAndDelete({ _id: req.params.id });
-  res.status(201).json(user);
+exports.updateBook = async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).json({ message: 'Book not found' });
+
+    book.name = req.body.name;
+    book.type = req.body.type;
+    await book.save();
+
+    res.status(200).json(book);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update book', error: err.message });
+  }
 };
 
-module.exports = { getUsers, createUser, updateUser, deleteUser };
+exports.deleteBook = async (req, res) => {
+  try {
+    const book = await Book.findByIdAndDelete(req.params.id);
+    if (!book) return res.status(404).json({ message: 'Book not found' });
+
+    res.status(200).json(book);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to delete book', error: err.message });
+  }
+};
+
+exports.signup = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ message: 'Email already exists' });
+    }
+    const user = await User.create({ name, email, password });
+    res.status(201).json({ data: { id: user._id, name: user.name, email: user.email }});
+  } catch (err) {
+    res.status(500).json({ message: 'Signup failed', error: err.message });
+  }
+};
+
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
+    const token = createToken(user);
+    res.json({ user: { id: user._id, name: user.name, email: user.email, token }});
+  } catch (err) {
+    res.status(500).json({ message: 'Login failed', error: err.message });
+  }
+};

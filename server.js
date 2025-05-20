@@ -18,12 +18,21 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api', userRoutes);
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.get('/users', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/user.html'));
-});
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/signup.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/login.html'));
+});
+
+app.get('/books', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/book.html'));
 });
 
 const PORT = process.env.PORT || 5000;
