@@ -41,7 +41,7 @@
 
       if (res.ok) {
         alert('Login successful');
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', data.data.token);
         // Redirect after login
         window.location.href = '/books';
       } else {
