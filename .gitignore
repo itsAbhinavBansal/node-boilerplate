@@ -1,3 +1,5 @@
 /node_modules
 package-lock.json
+setup.txt.env 
+.env
 setup.txt
