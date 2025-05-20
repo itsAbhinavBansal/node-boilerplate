@@ -15,10 +15,14 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log(err));
 
-app.use('/api/users', userRoutes);
+app.use('/api', userRoutes);
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.get('*', (req, res) => {
+app.get('/users', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/user.html'));
+});
+
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 

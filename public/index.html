@@ -1,70 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-  <meta charset="UTF-8" />
-  <title>Simple User API Demo</title>
-  <style>
-    body { font-family: Arial, sans-serif; max-width: 600px; margin: 2rem auto; }
-    input, button { padding: 0.5rem; margin: 0.5rem 0; width: 100%; }
-    #users { margin-top: 1rem; }
-    .user { padding: 0.5rem; border-bottom: 1px solid #ccc; }
-  </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="renderer" content="webkit">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="robots" content="noindex" />
+    <title>Node BoilerPlate API Server</title>
 </head>
-<body>
-  <h1>User API Demo</h1>
-  
-  <h2>Add User</h2>
-  <input id="name" placeholder="Name" />
-  <input id="email" placeholder="Email" />
-  <button onclick="addUser()">Add User</button>
-  
-  <h2>All Users</h2>
-  <button onclick="loadUsers()">Load Users</button>
-  <div id="users"></div>
 
-  <script>
-    const apiBase = `https://node-boilerplate-o1ll.onrender.com/api/users`;
-
-    async function addUser() {
-      const name = document.getElementById('name').value.trim();
-      const email = document.getElementById('email').value.trim();
-      if (!name || !email) {
-        alert('Please enter both name and email');
-        return;
-      }
-
-      const res = await fetch(apiBase, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ name, email })
-      });
-
-      if (res.ok) {
-        alert('User added!');
-        document.getElementById('name').value = '';
-        document.getElementById('email').value = '';
-        loadUsers();
-      } else {
-        alert('Failed to add user');
-      }
-    }
-
-    async function loadUsers() {
-      const res = await fetch(apiBase);
-      const users = await res.json();
-      console.log(users);
-      const usersDiv = document.getElementById('users');
-      usersDiv.innerHTML = '';
-      users.forEach(u => {
-        const div = document.createElement('div');
-        div.className = 'user';
-        div.textContent = `${u.name} (${u.email})`;
-        usersDiv.appendChild(div);
-      });
-    }
-
-    // Load users initially
-    loadUsers();
-  </script>
+<body style="background-color: #FFFFFF;color: #767785;">
+    <div id="app" style="text-align: center;">
+        <h2>Welcome to Node BoilerPlate</h2>
+        <h3>API Server is working fine!!</h3>
+    </div>
 </body>
+
 </html>
